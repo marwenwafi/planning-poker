@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../core/services/session.service';
@@ -24,6 +24,15 @@ export class LobbyComponent implements OnInit, OnDestroy {
   readonly isHost = this.sessionSvc.isHost;
   readonly connectionStatus = this.sessionSvc.connectionStatus;
 
+  constructor() {
+    effect(() => {
+      const s = this.sessionSvc.session();
+      if (s?.status === 'active') {
+        this.router.navigate(['/session', s.id, 'vote']);
+      }
+    });
+  }
+
   ngOnInit() {
     this.sessionId = this.route.snapshot.params['id'];
     const userId = sessionStorage.getItem('userId') ?? '';
@@ -31,9 +40,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     this.shareUrl.set(`${window.location.origin}/session/${this.sessionId}/join`);
     this.sessionSvc.connect(this.sessionId, userId, displayName);
-
-    // Navigate to voting when session becomes active
-    this.sessionSvc.session;  // subscribe via effect elsewhere — handled by template check
   }
 
   ngOnDestroy() {

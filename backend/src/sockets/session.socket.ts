@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { sessionStore } from '../services/session.store.js';
+import { sessionStore } from '../services/session.store';
 import {
   JoinSessionPayload,
   SubmitVotePayload,
@@ -7,7 +7,7 @@ import {
   NextIssuePayload,
   EndSessionPayload,
   SetEstimatePayload,
-} from '../types/index.js';
+} from '../types/index';
 
 export function registerSessionHandlers(io: Server, socket: Socket): void {
   socket.on('join_session', (payload: JoinSessionPayload) => {

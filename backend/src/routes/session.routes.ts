@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { sessionStore } from '../services/session.store.js';
-import { jiraService } from '../services/jira.service.js';
+import { sessionStore } from '../services/session.store';
+import { jiraService } from '../services/jira.service';
 
 export const sessionRouter = Router();
 

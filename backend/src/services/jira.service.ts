@@ -1,4 +1,4 @@
-import { JiraProject, JiraSprint, JiraIssue } from '../types/index.js';
+import { JiraProject, JiraSprint, JiraIssue } from '../types/index';
 
 const MOCK_PROJECTS: JiraProject[] = [
   { id: '1', key: 'SHOP', name: 'Shop Platform', avatarUrl: '' },

@@ -1,0 +1,25 @@
+<div class="join-page">
+  <div class="join-card">
+    <h1 class="title">Join Session</h1>
+    <p class="subtitle">Enter your name to join the planning session</p>
+
+    <div class="form">
+      <div class="field">
+        <label for="name">Your name</label>
+        <input
+          id="name"
+          type="text"
+          [(ngModel)]="displayName"
+          placeholder="e.g. Alice"
+          autocomplete="off"
+          (keyup.enter)="join()"
+          autofocus
+        />
+      </div>
+
+      <button class="btn btn--primary" [disabled]="!canJoin" (click)="join()">
+        Join Session →
+      </button>
+    </div>
+  </div>
+</div>

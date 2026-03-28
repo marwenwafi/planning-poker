@@ -13,7 +13,8 @@
         <input
           id="name"
           type="text"
-          [(ngModel)]="displayName"
+          [ngModel]="displayName()"
+          (ngModelChange)="displayName.set($event)"
           placeholder="e.g. Alice"
           autocomplete="off"
         />
@@ -56,7 +57,7 @@
           <label for="sprint">Sprint</label>
           <select
             id="sprint"
-            [ngModel]="selectedSprintId"
+            [ngModel]="selectedSprintId()"
             (ngModelChange)="onSprintChange($event)"
             [disabled]="loading()"
           >

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { PlanningSession, JiraIssue, VotingRound } from '../types/index.js';
+import { PlanningSession, JiraIssue, VotingRound } from '../types/index';
 
 interface CreateSessionDTO {
   hostUserId: string;

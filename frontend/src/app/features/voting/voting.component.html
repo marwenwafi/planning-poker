@@ -58,12 +58,19 @@
               @for (v of CARD_VALUES; track v) {
                 <button
                   class="estimate-btn"
-                  [class.selected]="suggestedEstimate === v"
-                  (click)="confirmAndNext(v)"
+                  [class.selected]="finalEstimate() === v"
+                  (click)="selectFinalEstimate(v)"
                 >{{ v }}h</button>
               }
             </div>
-            <button class="btn btn--outline" (click)="revote()">Revote</button>
+            <div class="host-nav">
+              <button class="btn btn--outline" (click)="revote()">Revote</button>
+              <button
+                class="btn btn--primary"
+                [disabled]="!finalEstimate()"
+                (click)="next()"
+              >Next →</button>
+            </div>
           </div>
         } @else {
           <p class="waiting-host">Waiting for host to confirm estimate…</p>

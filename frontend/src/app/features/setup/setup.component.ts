@@ -22,16 +22,16 @@ export class SetupComponent implements OnInit {
   readonly loading = this.jira.loading;
   readonly error = this.jira.error;
 
-  displayName = '';
+  displayName = signal('');
   selectedProjectKey = '';
   selectedBoardId: number | null = null;
-  selectedSprintId: number | null = null;
+  selectedSprintId = signal<number | null>(null);
   selectedSprintName = '';
   creating = signal(false);
 
   readonly canStart = computed(() =>
-    this.displayName.trim().length > 0 &&
-    this.selectedSprintId !== null &&
+    this.displayName().trim().length > 0 &&
+    this.selectedSprintId() !== null &&
     !this.creating()
   );
 
@@ -42,7 +42,7 @@ export class SetupComponent implements OnInit {
   async onProjectChange(key: string) {
     this.selectedProjectKey = key;
     this.selectedBoardId = null;
-    this.selectedSprintId = null;
+    this.selectedSprintId.set(null);
     this.jira.boards.set([]);
     this.jira.sprints.set([]);
     if (key) await this.jira.loadBoards(key);
@@ -50,14 +50,15 @@ export class SetupComponent implements OnInit {
 
   async onBoardChange(boardId: string) {
     this.selectedBoardId = parseInt(boardId, 10);
-    this.selectedSprintId = null;
+    this.selectedSprintId.set(null);
     this.jira.sprints.set([]);
     if (this.selectedBoardId) await this.jira.loadSprints(this.selectedBoardId);
   }
 
   onSprintChange(sprintId: string) {
-    this.selectedSprintId = parseInt(sprintId, 10);
-    const sprint = this.sprints().find(s => s.id === this.selectedSprintId);
+    const id = parseInt(sprintId, 10);
+    this.selectedSprintId.set(id);
+    const sprint = this.sprints().find(s => s.id === id);
     this.selectedSprintName = sprint?.name ?? '';
   }
 
@@ -66,15 +67,16 @@ export class SetupComponent implements OnInit {
     this.creating.set(true);
     try {
       const userId = this.getOrCreateUserId();
+      const name = this.displayName().trim();
       const result = await this.jira.createSession({
         hostUserId: userId,
-        hostDisplayName: this.displayName.trim(),
+        hostDisplayName: name,
         jiraProjectKey: this.selectedProjectKey,
-        sprintId: this.selectedSprintId!,
+        sprintId: this.selectedSprintId()!,
         sprintName: this.selectedSprintName,
       });
       sessionStorage.setItem('userId', userId);
-      sessionStorage.setItem('displayName', this.displayName.trim());
+      sessionStorage.setItem('displayName', name);
       await this.router.navigate(['/session', result.id, 'lobby']);
     } catch {
       this.jira.error.set('Failed to create session');

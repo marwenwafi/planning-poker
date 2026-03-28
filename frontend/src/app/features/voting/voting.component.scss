@@ -189,6 +189,13 @@
   justify-content: center;
 }
 
+.host-nav {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  width: 100%;
+}
+
 .estimate-btn {
   padding: 0.5rem 0.9rem;
   border: 2px solid var(--color-border);

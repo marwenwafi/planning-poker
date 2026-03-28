@@ -8,6 +8,11 @@ export const routes: Routes = [
       import('./features/setup/setup.component').then(m => m.SetupComponent),
   },
   {
+    path: 'session/:id/join',
+    loadComponent: () =>
+      import('./features/join/join.component').then(m => m.JoinComponent),
+  },
+  {
     path: 'session/:id/lobby',
     loadComponent: () =>
       import('./features/lobby/lobby.component').then(m => m.LobbyComponent),

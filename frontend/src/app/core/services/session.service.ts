@@ -71,11 +71,15 @@ export class SessionService {
     this.socket.on('vote_submitted', ({ userId: uid, hasVoted }: { userId: string; hasVoted: boolean }) => {
       const s = this.session();
       if (!s) return;
+      const round = s.currentRound;
       this.session.set({
         ...s,
         participants: s.participants.map(p =>
           p.userId === uid ? { ...p, hasVoted } : p
         ),
+        currentRound: round && !round.votedUserIds.includes(uid)
+          ? { ...round, votedUserIds: [...round.votedUserIds, uid] }
+          : round,
       });
     });
 

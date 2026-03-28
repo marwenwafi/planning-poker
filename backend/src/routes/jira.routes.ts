@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { jiraService } from '../services/jira.service.js';
+import { jiraService } from '../services/jira.service';
 
 export const jiraRouter = Router();
 

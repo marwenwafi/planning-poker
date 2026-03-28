@@ -30,6 +30,7 @@ export class VotingComponent implements OnInit, OnDestroy {
   readonly iHaveVoted = this.sessionSvc.iHaveVoted;
 
   selectedEstimate = signal<CardValue | null>(null);
+  finalEstimate = signal<CardValue | null>(null);
   saving = signal(false);
 
   constructor() {
@@ -37,6 +38,14 @@ export class VotingComponent implements OnInit, OnDestroy {
       const s = this.session();
       if (s?.status === 'completed') {
         this.router.navigate(['/session', this.sessionId, 'summary']);
+      }
+    });
+    // Pre-select suggested estimate when votes are revealed
+    effect(() => {
+      if (this.currentRound()?.phase === 'revealed') {
+        this.finalEstimate.set(this.suggestedEstimate);
+      } else {
+        this.finalEstimate.set(null);
       }
     });
   }
@@ -70,8 +79,15 @@ export class VotingComponent implements OnInit, OnDestroy {
     this.sessionSvc.requestRevote(this.sessionId);
   }
 
-  confirmAndNext(estimate: CardValue) {
+  selectFinalEstimate(value: CardValue) {
+    this.finalEstimate.set(value);
+  }
+
+  next() {
+    const estimate = this.finalEstimate();
+    if (!estimate) return;
     this.selectedEstimate.set(null);
+    this.finalEstimate.set(null);
     this.sessionSvc.nextIssue(this.sessionId, estimate);
   }
 

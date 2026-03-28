@@ -2,10 +2,10 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { config } from './config.js';
-import { jiraRouter } from './routes/jira.routes.js';
-import { sessionRouter } from './routes/session.routes.js';
-import { registerSessionHandlers } from './sockets/session.socket.js';
+import { config } from './config';
+import { jiraRouter } from './routes/jira.routes';
+import { sessionRouter } from './routes/session.routes';
+import { registerSessionHandlers } from './sockets/session.socket';
 
 const app = express();
 const httpServer = createServer(app);
