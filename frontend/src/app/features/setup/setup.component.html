@@ -1,0 +1,86 @@
+<div class="setup-page">
+  <div class="setup-card">
+    <h1 class="title">Planning Poker</h1>
+    <p class="subtitle">Set up a new sprint planning session</p>
+
+    @if (error()) {
+      <div class="alert alert--error">{{ error() }}</div>
+    }
+
+    <div class="form">
+      <div class="field">
+        <label for="name">Your name</label>
+        <input
+          id="name"
+          type="text"
+          [(ngModel)]="displayName"
+          placeholder="e.g. Alice"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="field">
+        <label for="project">Jira project</label>
+        <select
+          id="project"
+          [ngModel]="selectedProjectKey"
+          (ngModelChange)="onProjectChange($event)"
+          [disabled]="loading()"
+        >
+          <option value="">— select project —</option>
+          @for (p of projects(); track p.id) {
+            <option [value]="p.key">{{ p.name }} ({{ p.key }})</option>
+          }
+        </select>
+      </div>
+
+      @if (boards().length > 0) {
+        <div class="field">
+          <label for="board">Board</label>
+          <select
+            id="board"
+            [ngModel]="selectedBoardId"
+            (ngModelChange)="onBoardChange($event)"
+            [disabled]="loading()"
+          >
+            <option value="">— select board —</option>
+            @for (b of boards(); track b.id) {
+              <option [value]="b.id">{{ b.name }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      @if (sprints().length > 0) {
+        <div class="field">
+          <label for="sprint">Sprint</label>
+          <select
+            id="sprint"
+            [ngModel]="selectedSprintId"
+            (ngModelChange)="onSprintChange($event)"
+            [disabled]="loading()"
+          >
+            <option value="">— select sprint —</option>
+            @for (s of sprints(); track s.id) {
+              <option [value]="s.id">
+                {{ s.name }} <span class="badge">{{ s.state }}</span>
+              </option>
+            }
+          </select>
+        </div>
+      }
+
+      <button
+        class="btn btn--primary"
+        [disabled]="!canStart()"
+        (click)="startSession()"
+      >
+        @if (creating()) { Creating… } @else { Start Session }
+      </button>
+
+      @if (loading()) {
+        <p class="loading-hint">Loading…</p>
+      }
+    </div>
+  </div>
+</div>

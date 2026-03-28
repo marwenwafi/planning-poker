@@ -1,0 +1,54 @@
+<div class="lobby-page">
+  <div class="lobby-card">
+    @if (session(); as s) {
+      <h1 class="session-name">{{ s.name }}</h1>
+      <p class="sprint-info">{{ s.issues.length }} tickets · {{ s.sprintName }}</p>
+
+      <div class="share-box">
+        <span class="share-label">Invite your team</span>
+        <div class="share-row">
+          <input class="share-input" [value]="shareUrl()" readonly />
+          <button class="btn btn--outline" (click)="copyLink()">
+            {{ copied() ? 'Copied!' : 'Copy link' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="participants">
+        <h2>Participants ({{ connectedCount }})</h2>
+        <ul>
+          @for (p of s.participants; track p.userId) {
+            <li class="participant" [class.disconnected]="!p.isConnected">
+              <app-avatar [name]="p.displayName" />
+              <span class="participant-name">{{ p.displayName }}</span>
+              @if (p.isHost) { <span class="badge">host</span> }
+            </li>
+          }
+        </ul>
+      </div>
+
+      @if (isHost()) {
+        <button
+          class="btn btn--primary btn--large"
+          [disabled]="connectedCount < 1"
+          (click)="startVoting()"
+        >
+          Start Voting →
+        </button>
+        @if (connectedCount < 2) {
+          <p class="hint">Waiting for at least one more participant…</p>
+        }
+      } @else {
+        <div class="waiting">
+          <div class="spinner"></div>
+          <p>Waiting for the host to start the session…</p>
+        </div>
+      }
+    } @else {
+      <div class="connecting">
+        <div class="spinner"></div>
+        <p>Connecting…</p>
+      </div>
+    }
+  </div>
+</div>

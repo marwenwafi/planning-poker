@@ -1,0 +1,228 @@
+.voting-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background: var(--color-bg);
+  padding: 1.25rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.voting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .session-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-primary);
+  }
+
+  .progress {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+}
+
+.ticket-card {
+  background: var(--color-surface);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ticket-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  .issue-type {
+    font-size: 0.75rem;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .issue-key {
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  .current-estimate {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+  }
+}
+
+.ticket-summary {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.ticket-description {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+  max-height: 4.5em;
+  overflow: hidden;
+}
+
+.jira-link {
+  font-size: 0.85rem;
+  color: var(--color-primary);
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+.participants-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.participant-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+
+  &.voted { opacity: 1; }
+}
+
+.participant-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  max-width: 60px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vote-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 6px;
+  padding: 0.1rem 0.4rem;
+
+  &.voted-hidden {
+    background: var(--color-success);
+  }
+
+  &.pending {
+    background: var(--color-border);
+    color: var(--color-text-muted);
+  }
+}
+
+.deck {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.host-controls {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.voted-hint {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.results-panel {
+  background: var(--color-surface);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.suggestion {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+
+  strong { color: var(--color-primary); font-size: 1.3rem; }
+}
+
+.host-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+
+  .label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+}
+
+.estimate-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.estimate-btn {
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  &.selected { border-color: var(--color-primary); background: var(--color-primary); color: white; }
+}
+
+.waiting-host {
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.btn--highlight {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.connecting {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--color-text-muted);
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(var(--color-primary-rgb), 0); }
+}

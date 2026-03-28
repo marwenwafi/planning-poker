@@ -1,0 +1,108 @@
+<div class="voting-page">
+  @if (session(); as s) {
+    <header class="voting-header">
+      <div class="session-name">{{ s.name }}</div>
+      <div class="progress">{{ ticketProgress }}</div>
+    </header>
+
+    @if (currentIssue(); as issue) {
+      <div class="ticket-card">
+        <div class="ticket-meta">
+          <span class="issue-type">{{ issue.issueType }}</span>
+          <span class="issue-key">{{ issue.key }}</span>
+          @if (issue.currentEstimate) {
+            <span class="current-estimate">was {{ issue.currentEstimate }}</span>
+          }
+        </div>
+        <h2 class="ticket-summary">{{ issue.summary }}</h2>
+        @if (issue.description) {
+          <p class="ticket-description">{{ issue.description }}</p>
+        }
+        <a class="jira-link" [href]="issue.url" target="_blank" rel="noopener">
+          Open in Jira ↗
+        </a>
+      </div>
+    }
+
+    <!-- Participants row -->
+    <div class="participants-row">
+      @for (p of s.participants; track p.userId) {
+        @if (p.isConnected) {
+          <div class="participant-vote" [class.voted]="currentRound()?.votedUserIds?.includes(p.userId)">
+            <app-avatar [name]="p.displayName" [size]="40" />
+            <span class="participant-name">{{ p.displayName }}</span>
+            @if (currentRound()?.phase === 'revealed') {
+              <span class="vote-badge">{{ getParticipantVote(p.userId) ?? '—' }}h</span>
+            } @else if (currentRound()?.votedUserIds?.includes(p.userId)) {
+              <span class="vote-badge voted-hidden">✓</span>
+            } @else {
+              <span class="vote-badge pending">…</span>
+            }
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Revealed results -->
+    @if (currentRound()?.phase === 'revealed') {
+      <div class="results-panel">
+        @if (suggestedEstimate !== null) {
+          <div class="suggestion">
+            Suggested: <strong>{{ suggestedEstimate }}h</strong>
+          </div>
+        }
+        @if (isHost()) {
+          <div class="host-actions">
+            <span class="label">Final estimate:</span>
+            <div class="estimate-picker">
+              @for (v of CARD_VALUES; track v) {
+                <button
+                  class="estimate-btn"
+                  [class.selected]="suggestedEstimate === v"
+                  (click)="confirmAndNext(v)"
+                >{{ v }}h</button>
+              }
+            </div>
+            <button class="btn btn--outline" (click)="revote()">Revote</button>
+          </div>
+        } @else {
+          <p class="waiting-host">Waiting for host to confirm estimate…</p>
+        }
+      </div>
+    }
+
+    <!-- Card deck -->
+    @if (currentRound()?.phase !== 'revealed') {
+      <div class="deck">
+        @for (value of CARD_VALUES; track value) {
+          <app-poker-card
+            [value]="value"
+            [selected]="myVote() === value || selectedEstimate() === value"
+            (clicked)="vote(value)"
+          />
+        }
+      </div>
+
+      @if (isHost()) {
+        <div class="host-controls">
+          <button
+            class="btn btn--primary"
+            [class.btn--highlight]="allVoted()"
+            [disabled]="!currentRound()?.votedUserIds?.length"
+            (click)="reveal()"
+          >
+            Reveal Votes
+            @if (allVoted()) { · All voted! }
+          </button>
+        </div>
+      } @else if (iHaveVoted()) {
+        <p class="voted-hint">Vote submitted. Waiting for others…</p>
+      }
+    }
+  } @else {
+    <div class="connecting">
+      <div class="spinner"></div>
+      <p>Connecting to session…</p>
+    </div>
+  }
+</div>

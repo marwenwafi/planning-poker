@@ -1,0 +1,9 @@
+<button
+  class="poker-card"
+  [class.poker-card--selected]="selected"
+  [class.poker-card--revealed]="revealed"
+  (click)="onClick()"
+  [attr.aria-pressed]="selected"
+>
+  <span class="card-value">{{ value }}h</span>
+</button>

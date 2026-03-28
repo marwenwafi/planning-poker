@@ -1,0 +1,81 @@
+<div class="summary-page">
+  <div class="summary-card">
+    @if (session(); as s) {
+      <h1 class="title">Session Complete</h1>
+      <p class="subtitle">{{ s.name }}</p>
+
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-value">{{ completedRounds.length }}</span>
+          <span class="stat-label">tickets estimated</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">{{ totalEstimatedHours() }}h</span>
+          <span class="stat-label">total</span>
+        </div>
+      </div>
+
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Summary</th>
+            <th>Estimate</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of completedRounds; track r.issueKey) {
+            <tr>
+              <td class="issue-key">{{ r.issueKey }}</td>
+              <td class="issue-summary">{{ r.issueSummary }}</td>
+              <td class="estimate">
+                @if (r.finalEstimate !== null) {
+                  <strong>{{ r.finalEstimate }}h</strong>
+                } @else {
+                  <span class="skipped">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (saveError()) {
+        <div class="alert alert--error">{{ saveError() }}</div>
+      }
+
+      @if (saving()) {
+        <div class="save-progress">
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width.%]="saveTotal() > 0 ? (saveProgress() / saveTotal()) * 100 : 0"
+            ></div>
+          </div>
+          <span>Saving {{ saveProgress() }} / {{ saveTotal() }} to Jira…</span>
+        </div>
+      }
+
+      <div class="actions">
+        @if (!saved()) {
+          <button class="btn btn--primary" [disabled]="saving()" (click)="saveToJira()">
+            Save estimates to Jira
+          </button>
+        } @else {
+          <div class="saved-badge">✓ Saved to Jira</div>
+        }
+        <button class="btn btn--outline" [disabled]="saving()" (click)="exportCsv()">
+          Export CSV
+        </button>
+        <button class="btn btn--ghost" (click)="newSession()">
+          New session
+        </button>
+      </div>
+    } @else {
+      <div class="connecting">
+        <div class="spinner"></div>
+        <p>Loading session…</p>
+      </div>
+    }
+  </div>
+</div>
