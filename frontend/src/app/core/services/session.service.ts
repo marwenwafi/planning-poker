@@ -57,7 +57,7 @@ export class SessionService {
     this.localUser.set({ userId, displayName });
     this.connectionStatus.set('connecting');
 
-    const socketUrl = environment.socketUrl || window.location.origin;
+    const socketUrl = (window as any).__env?.SOCKET_URL || environment.socketUrl || window.location.origin;
     console.log('[socket] connecting to', socketUrl);
 
     this.socket = io(socketUrl, { transports: ['polling', 'websocket'] });
