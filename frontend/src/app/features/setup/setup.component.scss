@@ -66,17 +66,51 @@
   }
 }
 
-.loading-hint {
-  text-align: center;
+.csv-hint {
+  font-size: 0.8rem;
   color: var(--color-text-muted);
-  font-size: 0.875rem;
+  margin-bottom: 0.4rem;
+
+  code {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 0.05rem 0.3rem;
+    font-size: 0.78rem;
+  }
 }
 
-.badge {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
+.file-input {
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.preview {
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.preview-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-success);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.preview-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+
+  li { color: var(--color-text); }
+  .more { color: var(--color-text-muted); font-style: italic; }
 }

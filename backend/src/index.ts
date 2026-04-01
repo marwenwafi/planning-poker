@@ -10,11 +10,13 @@ import { registerSessionHandlers } from './sockets/session.socket';
 const app = express();
 const httpServer = createServer(app);
 
+const corsOrigin = process.env['CORS_ORIGIN'] ?? 'http://localhost:4200';
+
 const io = new Server(httpServer, {
-  cors: { origin: 'http://localhost:4200', methods: ['GET', 'POST'] },
+  cors: { origin: corsOrigin, methods: ['GET', 'POST'] },
 });
 
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors({ origin: corsOrigin }));
 app.use(express.json());
 
 app.use('/api/jira', jiraRouter);

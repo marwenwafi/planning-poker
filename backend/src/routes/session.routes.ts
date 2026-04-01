@@ -1,30 +1,22 @@
 import { Router, Request, Response } from 'express';
 import { sessionStore } from '../services/session.store';
-import { jiraService } from '../services/jira.service';
 
 export const sessionRouter = Router();
 
-sessionRouter.post('/', async (req: Request, res: Response) => {
-  const { hostUserId, hostDisplayName, hostSocketId, jiraProjectKey, sprintId, sprintName } = req.body;
-  if (!hostUserId || !hostDisplayName || !jiraProjectKey || !sprintId) {
+sessionRouter.post('/', (req: Request, res: Response) => {
+  const { hostUserId, hostDisplayName, hostSocketId, sessionName, issues } = req.body;
+  if (!hostUserId || !hostDisplayName || !sessionName || !Array.isArray(issues) || issues.length === 0) {
     res.status(400).json({ error: 'Missing required fields' });
     return;
   }
-  try {
-    const issues = await jiraService.getIssues(sprintId);
-    const session = sessionStore.create({
-      hostUserId,
-      hostDisplayName,
-      hostSocketId: hostSocketId ?? '',
-      jiraProjectKey,
-      sprintId,
-      sprintName: sprintName ?? `Sprint ${sprintId}`,
-      issues,
-    });
-    res.status(201).json(session);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
-  }
+  const session = sessionStore.create({
+    hostUserId,
+    hostDisplayName,
+    hostSocketId: hostSocketId ?? '',
+    sessionName,
+    issues,
+  });
+  res.status(201).json(session);
 });
 
 sessionRouter.get('/:id', (req: Request, res: Response) => {

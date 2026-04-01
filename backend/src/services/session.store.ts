@@ -5,9 +5,7 @@ interface CreateSessionDTO {
   hostUserId: string;
   hostDisplayName: string;
   hostSocketId: string;
-  jiraProjectKey: string;
-  sprintId: number;
-  sprintName: string;
+  sessionName: string;
   issues: JiraIssue[];
 }
 
@@ -18,10 +16,10 @@ class SessionStore {
     const id = uuidv4().slice(0, 8);
     const session: PlanningSession = {
       id,
-      name: `${dto.sprintName} Planning`,
-      jiraProjectKey: dto.jiraProjectKey,
-      sprintId: dto.sprintId,
-      sprintName: dto.sprintName,
+      name: dto.sessionName,
+      jiraProjectKey: '',
+      sprintId: 0,
+      sprintName: '',
       issues: dto.issues,
       currentIssueIndex: -1,
       currentRound: null,

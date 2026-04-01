@@ -3,8 +3,8 @@
     <h1 class="title">Planning Poker</h1>
     <p class="subtitle">Set up a new sprint planning session</p>
 
-    @if (error()) {
-      <div class="alert alert--error">{{ error() }}</div>
+    @if (parseError()) {
+      <div class="alert alert--error">{{ parseError() }}</div>
     }
 
     <div class="form">
@@ -21,53 +21,43 @@
       </div>
 
       <div class="field">
-        <label for="project">Jira project</label>
-        <select
-          id="project"
-          [ngModel]="selectedProjectKey"
-          (ngModelChange)="onProjectChange($event)"
-          [disabled]="loading()"
-        >
-          <option value="">— select project —</option>
-          @for (p of projects(); track p.id) {
-            <option [value]="p.key">{{ p.name }} ({{ p.key }})</option>
-          }
-        </select>
+        <label for="session">Session name</label>
+        <input
+          id="session"
+          type="text"
+          [ngModel]="sessionName()"
+          (ngModelChange)="sessionName.set($event)"
+          placeholder="e.g. Sprint 12 Planning"
+          autocomplete="off"
+        />
       </div>
 
-      @if (boards().length > 0) {
-        <div class="field">
-          <label for="board">Board</label>
-          <select
-            id="board"
-            [ngModel]="selectedBoardId"
-            (ngModelChange)="onBoardChange($event)"
-            [disabled]="loading()"
-          >
-            <option value="">— select board —</option>
-            @for (b of boards(); track b.id) {
-              <option [value]="b.id">{{ b.name }}</option>
-            }
-          </select>
+      <div class="field">
+        <label for="csv">Import tickets (CSV)</label>
+        <div class="csv-hint">
+          Required columns: <code>Key</code>, <code>Summary</code> —
+          optional: <code>Description</code>, <code>IssueType</code>, <code>Priority</code>, <code>Assignee</code>
         </div>
-      }
+        <input
+          id="csv"
+          type="file"
+          accept=".csv,text/csv"
+          (change)="onFileChange($event)"
+          class="file-input"
+        />
+      </div>
 
-      @if (sprints().length > 0) {
-        <div class="field">
-          <label for="sprint">Sprint</label>
-          <select
-            id="sprint"
-            [ngModel]="selectedSprintId()"
-            (ngModelChange)="onSprintChange($event)"
-            [disabled]="loading()"
-          >
-            <option value="">— select sprint —</option>
-            @for (s of sprints(); track s.id) {
-              <option [value]="s.id">
-                {{ s.name }} <span class="badge">{{ s.state }}</span>
-              </option>
+      @if (issues().length > 0) {
+        <div class="preview">
+          <span class="preview-count">{{ issues().length }} tickets loaded</span>
+          <ul class="preview-list">
+            @for (issue of issues().slice(0, 5); track issue.key) {
+              <li><strong>{{ issue.key }}</strong> {{ issue.summary }}</li>
             }
-          </select>
+            @if (issues().length > 5) {
+              <li class="more">…and {{ issues().length - 5 }} more</li>
+            }
+          </ul>
         </div>
       }
 
@@ -78,10 +68,6 @@
       >
         @if (creating()) { Creating… } @else { Start Session }
       </button>
-
-      @if (loading()) {
-        <p class="loading-hint">Loading…</p>
-      }
     </div>
   </div>
 </div>
