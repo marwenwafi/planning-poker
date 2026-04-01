@@ -2,6 +2,8 @@
   class="poker-card"
   [class.poker-card--selected]="selected"
   [class.poker-card--revealed]="revealed"
+  [class.poker-card--disabled]="disabled"
+  [disabled]="disabled"
   (click)="onClick()"
   [attr.aria-pressed]="selected"
 >

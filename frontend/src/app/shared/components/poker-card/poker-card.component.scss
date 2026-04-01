@@ -29,6 +29,13 @@
     }
   }
 
+  &--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
   &--revealed {
     border-color: var(--color-success);
     background: var(--color-success-light);

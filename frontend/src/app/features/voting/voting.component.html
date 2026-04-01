@@ -85,6 +85,7 @@
           <app-poker-card
             [value]="value"
             [selected]="myVote() === value || selectedEstimate() === value"
+            [disabled]="revealing()"
             (clicked)="vote(value)"
           />
         }
@@ -95,11 +96,10 @@
           <button
             class="btn btn--primary"
             [class.btn--highlight]="allVoted()"
-            [disabled]="!currentRound()?.votedUserIds?.length"
+            [disabled]="!currentRound()?.votedUserIds?.length || revealing()"
             (click)="reveal()"
           >
-            Reveal Votes
-            @if (allVoted()) { · All voted! }
+            @if (revealing()) { Revealing… } @else { Reveal Votes @if (allVoted()) { · All voted! } }
           </button>
         </div>
       } @else if (iHaveVoted()) {

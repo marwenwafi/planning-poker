@@ -13,9 +13,10 @@ export class PokerCardComponent {
   @Input() value!: CardValue;
   @Input() selected = false;
   @Input() revealed = false;
+  @Input() disabled = false;
   @Output() clicked = new EventEmitter<CardValue>();
 
   onClick() {
-    this.clicked.emit(this.value);
+    if (!this.disabled) this.clicked.emit(this.value);
   }
 }

@@ -31,6 +31,7 @@ export class VotingComponent implements OnInit, OnDestroy {
 
   selectedEstimate = signal<CardValue | null>(null);
   finalEstimate = signal<CardValue | null>(null);
+  revealing = signal(false);
   saving = signal(false);
 
   constructor() {
@@ -40,12 +41,14 @@ export class VotingComponent implements OnInit, OnDestroy {
         this.router.navigate(['/session', this.sessionId, 'summary']);
       }
     });
-    // Pre-select suggested estimate when votes are revealed
+    // Pre-select suggested estimate when votes are revealed; reset state on new round
     effect(() => {
-      if (this.currentRound()?.phase === 'revealed') {
+      const phase = this.currentRound()?.phase;
+      if (phase === 'revealed') {
         this.finalEstimate.set(this.suggestedEstimate);
       } else {
         this.finalEstimate.set(null);
+        this.revealing.set(false);
       }
     });
   }
@@ -71,10 +74,12 @@ export class VotingComponent implements OnInit, OnDestroy {
   }
 
   reveal() {
+    this.revealing.set(true);
     this.sessionSvc.revealVotes(this.sessionId);
   }
 
   revote() {
+    this.revealing.set(false);
     this.selectedEstimate.set(null);
     this.sessionSvc.requestRevote(this.sessionId);
   }
