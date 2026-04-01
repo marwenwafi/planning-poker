@@ -62,7 +62,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.router.navigate(['/session', this.sessionId, 'vote']);
   }
 
-  joinAsGuest() {
-    this.router.navigate(['/session', this.sessionId, 'vote']);
+  retry() {
+    this.sessionSvc.disconnect();
+    const userId = sessionStorage.getItem('userId') ?? '';
+    const displayName = sessionStorage.getItem('displayName') ?? 'Guest';
+    this.sessionSvc.connect(this.sessionId, userId, displayName);
   }
 }

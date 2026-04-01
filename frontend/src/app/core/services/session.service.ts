@@ -8,7 +8,7 @@ import {
   VotingRound,
 } from '../models';
 
-export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected';
+export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
@@ -57,16 +57,26 @@ export class SessionService {
     this.localUser.set({ userId, displayName });
     this.connectionStatus.set('connecting');
 
-    this.socket = environment.socketUrl
-      ? io(environment.socketUrl, { transports: ['websocket', 'polling'] })
-      : io({ transports: ['websocket', 'polling'] });
+    const socketUrl = environment.socketUrl || window.location.origin;
+    console.log('[socket] connecting to', socketUrl);
+
+    this.socket = io(socketUrl, { transports: ['polling', 'websocket'] });
 
     this.socket.on('connect', () => {
+      console.log('[socket] connected');
       this.connectionStatus.set('connected');
       this.socket!.emit('join_session', { sessionId, userId, displayName });
     });
 
-    this.socket.on('disconnect', () => this.connectionStatus.set('disconnected'));
+    this.socket.on('connect_error', (err) => {
+      console.error('[socket] connect_error', err.message);
+      this.connectionStatus.set('error');
+    });
+
+    this.socket.on('disconnect', (reason) => {
+      console.warn('[socket] disconnected', reason);
+      this.connectionStatus.set('disconnected');
+    });
 
     this.socket.on('session_updated', (s: PlanningSession) => this.session.set(s));
 
