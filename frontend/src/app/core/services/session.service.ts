@@ -57,7 +57,9 @@ export class SessionService {
     this.localUser.set({ userId, displayName });
     this.connectionStatus.set('connecting');
 
-    this.socket = io(environment.socketUrl, { transports: ['websocket', 'polling'] });
+    this.socket = environment.socketUrl
+      ? io(environment.socketUrl, { transports: ['websocket', 'polling'] })
+      : io({ transports: ['websocket', 'polling'] });
 
     this.socket.on('connect', () => {
       this.connectionStatus.set('connected');
